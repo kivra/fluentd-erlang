@@ -19,6 +19,7 @@ Configuration options:
         , {port,               24224}       % Fluentd Agent Port
         , {auto_reconnect,     false}       % Auto Reconnect on closed conn
         , {reconnect_interval, 100}         % Reconnect Interval
+        , {enabled, true}                   % Enabled/Disabled
         ]}
 ```
 
