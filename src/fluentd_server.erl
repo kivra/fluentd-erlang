@@ -116,18 +116,15 @@ handle_info(reconnect, State0) ->
 handle_info({'EXIT', Pid, disconnected}, State) ->
     ?critical("EXIT disconnected: ~p", [Pid]),
     ?increment([exits, disconnected]),
-    disconnect(State),
-    {stop, disconnected, State};
+    disconnect(State);
 handle_info({'EXIT', Pid, Rsn}, State) ->
     ?error("EXIT ~p: ~p", [Pid, Rsn]),
     ?increment([exits, other]),
-    disconnect(State),
-    {stop, disconnected, State};
+    disconnect(State);
 handle_info({tcp_closed, Sock}, State) ->
     ?critical("EXIT disconnected: ~p", [Sock]),
     ?increment([exits, disconnected]),
-    disconnect(State),
-    {stop, disconnected, State};
+    disconnect(State);
 handle_info(Info, State) ->
     ?warning("~p", [Info]),
     {noreply, State}.
