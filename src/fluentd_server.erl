@@ -56,7 +56,8 @@
 -record(s,
         { ip                     :: inet:ip_address() %\ Fluentd
         , port                   :: inet:port_number()%/ Agent
-        , sock=undefined         :: gen_tcp:socket()  %  Socket
+        , sock=undefined         :: gen_tcp:socket()  % Socket
+        , enabled=true           :: boolean()         % Fluentd Enabled
         , auto_reconnect=false   :: boolean()         % true, auto reconnect
                                                       % false, exit on conn fail
         , reconnect_interval=100 :: non_neg_integer() % Reconnect Interval
@@ -76,14 +77,19 @@ init(Args)                     ->
     Port       = s2_env:get_arg(Args, ?APP, fluentd_port,       24224),
     Reconnect  = s2_env:get_arg(Args, ?APP, auto_reconnect,     true),
     ReInterval = s2_env:get_arg(Args, ?APP, reconnect_interval, 100),
+    Enabled    = s2_env:get_arg(Args, ?APP, enabled,            true),
     State      = #s{ ip=IP
                    , port=Port
                    , auto_reconnect=Reconnect
                    , reconnect_interval=ReInterval
                    },
-    case Reconnect of
-        true  -> self() ! reconnect, {ok, State};
-        false -> connect(State)
+    case Enabled of
+        false -> {ok, State};
+        true  ->
+            case Reconnect of
+                true  -> self() ! reconnect, {ok, State};
+                false -> connect(State)
+            end
     end.
 
 handle_call(stop, _From, S) ->
