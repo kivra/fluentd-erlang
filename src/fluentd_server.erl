@@ -80,6 +80,7 @@ init(Args)                     ->
     Enabled    = s2_env:get_arg(Args, ?APP, enabled,            true),
     State      = #s{ ip=IP
                    , port=Port
+                   , enabled=Enabled
                    , auto_reconnect=Reconnect
                    , reconnect_interval=ReInterval
                    },
@@ -92,11 +93,15 @@ init(Args)                     ->
             end
     end.
 
-handle_call(stop, _From, S) ->
+handle_call(stop, _, S) ->
     {stop, stopped, gen_tcp:close(S#s.sock), S}; %kills linked
-handle_call({send, {Label, Data}}, _From, #s{sock=Socket} = S) ->
+handle_call({send, {_, _}}, _, #s{enabled=false} = S) ->
+    {reply, ok, S};
+handle_call({send, {Label, Data}}, _, #s{sock=Socket} = S) ->
     {reply, do_send(Socket, pack_data(Label, Data)), S}.
 
+handle_cast({send, {_, _}}, #s{enabled=false} = S) ->
+    {noreply, S};
 handle_cast({send, {Label, Data}}, #s{sock=Socket} = S) ->
     do_send(Socket, pack_data(Label, Data)),
     {noreply, S};
