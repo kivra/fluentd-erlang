@@ -36,11 +36,11 @@
 
 %%%_ * API -------------------------------------------------------------
 -spec send(label(), data())       -> ok | {error, reason()}.
-send(Label, Data) when is_binary(Label) andalso is_binary(Data) ->
+send(Label, Data) when is_binary(Label) ->
     fluentd_server:send(Label, Data).
 
 -spec send_async(label(), data()) -> ok | {error, reason()}.
-send_async(Label, Data) when is_binary(Label) andalso is_binary(Data) ->
+send_async(Label, Data) when is_binary(Label) ->
     fluentd_server:send_async(Label, Data).
 
 %%%_* Tests ============================================================

@@ -1,10 +1,10 @@
 PROJECT = fluentd
 
 # Dependecies ##########################################################
-DEPS = stdlib2 msgpack
+DEPS = stdlib2 msgpack jsx
 
 dep_stdlib2 = git git@github.com:kivra/stdlib2.git          master
-dep_msgpack = git git@github.com:msgpack/msgpack-erlang.git 0.3.2
+dep_jsx     = git git@github.com:talentdeficit/jsx.git      v2.1.1
 
 # Standard targets #####################################################
 include erlang.mk

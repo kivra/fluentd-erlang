@@ -160,10 +160,10 @@ disconnect(#s{sock=Socket} = State0) ->
 maybe_close_socket(undefined) -> ok;
 maybe_close_socket(Socket)    -> gen_tcp:close(Socket).
 
-%% @doc Pack Payload according to Fluentd-spec using MessagePack
+%% @doc Pack Payload according to Fluentd-spec using Json
 pack_data(Label, Data) ->
     {M, S, _} = os:timestamp(),
-    msgpack:pack([Label, (M*1000000)+S, Data]).
+    jsx:encode([Label, (M*1000000)+S, Data]).
 
 %%%_* Tests ============================================================
 -ifdef(TEST).
